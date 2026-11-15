@@ -143,26 +143,16 @@
 </div>
 
 <script>
-    // PAROLA ADMIN ASCUNSĂ ÎN COD (Criptată simplu în Base64 pentru a nu fi vizibilă la o lectură simplă)
-    // Parola originală: 1@a4w1n_%
-    const _ENCRYPTED_ADMIN = "MWBhNHcxbl8l"; 
+    // PAROLA DE ADMIN FIXĂ
+    const ADMIN_PASSWORD = "1@a4w1n_%"; 
     const COMMISSION_RATE = 0.04; // 4% fix
 
-    // Stare inițială stocată local
     let db = JSON.parse(localStorage.getItem('sales_db')) || {
         employees: [],
         sales: []
     };
 
     let currentUser = null;
-
-    function verifyAdmin(pass) {
-        try {
-            return pass === atob(_ENCRYPTED_ADMIN);
-        } catch (e) {
-            return false;
-        }
-    }
 
     function saveDb() {
         localStorage.setItem('sales_db', JSON.stringify(db));
@@ -172,7 +162,7 @@
         const code = document.getElementById('accessCode').value.trim();
         const errDiv = document.getElementById('loginError');
 
-        if (verifyAdmin(code)) {
+        if (code === ADMIN_PASSWORD) {
             currentUser = { role: 'admin' };
             errDiv.classList.add('hidden');
             showScreen('adminScreen');
