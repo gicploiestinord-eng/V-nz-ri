@@ -3,342 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Vânzări & Comisioane</title>
-    <!-- SheetJS pentru export Excel (.xlsx) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Raport Zilnic Vânzări</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --success: #16a34a;
-            --danger: #dc2626;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #cbd5e1;
+        body {
+            background-color: #EEF2F6 !important;
+            color: #1E293B !important;
+            margin: 0 !important;
+            padding: 16px !important;
+            font-family: 'Segoe UI', Arial, sans-serif !important;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.5; }
-        .container { max-width: 600px; margin: 0 auto; background: var(--card-bg); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        h1, h2 { font-size: 1.25rem; margin-bottom: 16px; color: var(--text); text-align: center; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.2s; }
-        input:focus { border-color: var(--primary); }
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
-        button:hover { background: var(--primary-dark); }
-        .btn-success { background: var(--success); }
-        .btn-success:hover { background: #15803d; }
-        .btn-danger { background: var(--danger); }
-        .btn-danger:hover { background: #b91c1c; }
-        .btn-secondary { background: #64748b; }
-        .btn-secondary:hover { background: #475569; }
-        .hidden { display: none !important; }
-        .alert { padding: 10px; border-radius: 6px; font-size: 0.875rem; margin-bottom: 16px; text-align: center; }
-        .alert-error { background: #fee2e2; color: #991b1b; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.875rem; }
-        th, td { border: 1px solid var(--border); padding: 8px; text-align: left; }
-        th { background: #f1f5f9; }
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #e2e8f0; }
-        .actions-row { display: flex; gap: 8px; margin-top: 12px; }
+        .card {
+            background-color: #FFFFFF !important;
+            width: 100% !important;
+            max-width: 480px !important;
+            margin: 20px auto !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 25px rgba(31, 78, 120, 0.15) !important;
+            overflow: hidden !important;
+            border: 1px solid #CBD5E1 !important;
+        }
+        .card-header {
+            background: #1F4E78 !important;
+            color: #FFFFFF !important;
+            padding: 24px 20px !important;
+            text-align: center !important;
+        }
+        .card-header h1 {
+            font-size: 20px !important;
+            font-weight: bold !important;
+            text-transform: uppercase !important;
+            margin: 0 0 8px 0 !important;
+        }
+        .card-header .subtitle {
+            font-size: 13px !important;
+            color: #E2E8F0 !important;
+            margin-bottom: 12px !important;
+        }
+        .timestamp-badge {
+            display: inline-block !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            font-size: 12px !important;
+            font-weight: bold !important;
+            color: #FFFFFF !important;
+        }
+        .card-body {
+            padding: 24px !important;
+        }
+        .form-group {
+            margin-bottom: 16px !important;
+        }
+        label {
+            display: block !important;
+            font-weight: bold !important;
+            margin-bottom: 6px !important;
+            font-size: 12px !important;
+            color: #1E293B !important;
+            text-transform: uppercase !important;
+        }
+        input, select {
+            width: 100% !important;
+            padding: 12px !important;
+            background-color: #F8FAFC !important;
+            border: 1px solid #CBD5E1 !important;
+            border-radius: 8px !important;
+            font-size: 15px !important;
+            color: #1E293B !important;
+        }
+        .btn-whatsapp {
+            background-color: #25D366 !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            width: 100% !important;
+            padding: 15px !important;
+            border-radius: 10px !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            margin-top: 10px !important;
+        }
+        .btn-group {
+            display: flex !important;
+            gap: 10px !important;
+            margin-top: 10px !important;
+        }
+        .btn-secondary {
+            flex: 1 !important;
+            background-color: #F1F5F9 !important;
+            color: #1F4E78 !important;
+            border: 1px solid #CBD5E1 !important;
+            padding: 12px !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            text-align: center !important;
+        }
+        .toast {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #DCFCE7 !important;
+            color: #166534 !important;
+            border-radius: 8px;
+            font-size: 14px !important;
+            text-align: center !important;
+            font-weight: bold !important;
+        }
+        .card-footer {
+            background-color: #F8FAFC !important;
+            border-top: 1px solid #E2E8F0 !important;
+            padding: 14px !important;
+            text-align: center !important;
+            font-size: 12px !important;
+            color: #64748B !important;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- ECRAN DE LOGARE -->
-    <div id="loginScreen">
-        <h1>Autentificare Sistem</h1>
-        <div id="loginError" class="alert alert-error hidden">Cod invalid sau necunoscut!</div>
-        <div class="form-group">
-            <label for="accessCode">Introduceți codul de acces:</label>
-            <input type="password" id="accessCode" placeholder="Introduceți codul...">
-        </div>
-        <button onclick="handleLogin()">Autentificare</button>
+<div class="card" id="mainCard">
+    <div class="card-header">
+        <h1>Raport Zilnic Vânzări</h1>
+        <div class="subtitle">Activitate Teren</div>
+        <div class="timestamp-badge" id="currentDateTime">Se încarcă...</div>
     </div>
 
-    <!-- PANOU ANGAJAT -->
-    <div id="employeeScreen" class="hidden">
-        <h2>Portal Angajat: <span id="empNameDisplay"></span></h2>
-        <div class="form-group">
-            <label for="empInstitution">Instituție / Locație:</label>
-            <input type="text" id="empInstitution" placeholder="Ex: Școala Nr. 1 sau Primăria">
-        </div>
-        <div class="form-group">
-            <label for="empAmount">Sumă Vânzare (sau Retur cu minus, ex: -150):</label>
-            <input type="number" id="empAmount" step="0.01" placeholder="0.00">
-        </div>
-        <button onclick="addSale()" class="btn-success">Salvează Înregistrarea</button>
-        
-        <h3 style="margin-top: 24px; font-size: 1rem;">Înregistrările mele:</h3>
-        <div style="max-height: 200px; overflow-y: auto;">
-            <table id="empTable">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Instituție</th>
-                        <th>Sumă (Lei)</th>
-                        <th>Comision</th>
-                    </tr>
-                </thead>
-                <tbody id="empTableBody"></tbody>
-            </table>
-        </div>
+    <div class="card-body">
+        <form id="salesForm" onsubmit="sendToWhatsApp(event)">
+            <div class="form-group">
+                <label for="agentName">Nume Agent</label>
+                <input type="text" id="agentName" required placeholder="ex: Popescu Ion">
+            </div>
 
-        <div class="actions-row">
-            <button onclick="exportExcel()" class="btn-secondary">Exportă Excel (.xlsx)</button>
-            <button onclick="logout()" class="btn-danger">Ieșire</button>
-        </div>
+            <div class="form-group">
+                <label for="location">Locația / Instituția</label>
+                <input type="text" id="location" required placeholder="ex: Primăria / Școala">
+            </div>
+
+            <div class="form-group">
+                <label for="saleAmount">Suma Vânzare (Lei)</label>
+                <input type="number" id="saleAmount" required min="0" step="0.01" placeholder="ex: 2500">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status Vânzare</label>
+                <select id="status">
+                    <option value="Validat">✅ Validat</option>
+                    <option value="Stand-by">⏳ Stand-by vânzare</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Observații</label>
+                <input type="text" id="notes" placeholder="Opțional">
+            </div>
+
+            <button type="submit" class="btn-whatsapp">
+                📲 Trimite pe WhatsApp
+            </button>
+
+            <div class="btn-group">
+                <button type="button" class="btn-secondary" onclick="copyReport()">📋 Copiază Text</button>
+                <button type="button" class="btn-secondary" onclick="resetForm()">🔄 Resetează</button>
+            </div>
+
+            <div id="toastMsg" class="toast">Raportul a fost copiat!</div>
+        </form>
     </div>
 
-    <!-- PANOU ADMIN -->
-    <div id="adminScreen" class="hidden">
-        <h2>Panou Administrator</h2>
-        <div class="alert" style="background: #e0f2fe; color: #0369a1;">Sistem activ - Gestiune Echipă</div>
-        
-        <h3 style="font-size: 1rem; margin-top: 16px;">Adăugare Angajat Nou & Cod Unic:</h3>
-        <div class="form-group" style="margin-top: 8px;">
-            <label for="newEmpName">Nume Angajat:</label>
-            <input type="text" id="newEmpName" placeholder="Nume și Prenume">
-        </div>
-        <div class="form-group">
-            <label for="newEmpCode">Cod Unic Acces:</label>
-            <input type="text" id="newEmpCode" placeholder="Ex: codangajat1">
-        </div>
-        <button onclick="addEmployee()">Salvează Angajat</button>
-
-        <div style="max-height: 160px; overflow-y: auto; margin-top: 12px;">
-            <table id="adminEmpTable">
-                <thead>
-                    <tr>
-                        <th>Nume</th>
-                        <th>Cod</th>
-                        <th>Acțiune</th>
-                    </tr>
-                </thead>
-                <tbody id="adminEmpTableBody"></tbody>
-            </table>
-        </div>
-
-        <h3 style="font-size: 1rem; margin-top: 24px;">Centralizator Vânzări (Local):</h3>
-        <div style="max-height: 180px; overflow-y: auto;">
-            <table id="adminSalesTable">
-                <thead>
-                    <tr>
-                        <th>Angajat</th>
-                        <th>Instituție</th>
-                        <th>Sumă</th>
-                        <th>Comision</th>
-                    </tr>
-                </thead>
-                <tbody id="adminSalesTableBody"></tbody>
-            </table>
-        </div>
-
-        <div class="actions-row">
-            <button onclick="adminExportMaster()" class="btn-secondary">Export Master .xlsx</button>
-            <button onclick="logout()" class="btn-danger">Ieșire</button>
-        </div>
+    <div class="card-footer">
+        Sistem Centralizat
     </div>
 </div>
 
 <script>
-    // PAROLA DE ADMIN FIXĂ
-    const ADMIN_PASSWORD = "1@a4w1n_%"; 
-    const COMMISSION_RATE = 0.04; // 4% fix
-
-    let db = JSON.parse(localStorage.getItem('sales_db')) || {
-        employees: [],
-        sales: []
-    };
-
-    let currentUser = null;
-
-    function saveDb() {
-        localStorage.setItem('sales_db', JSON.stringify(db));
+    function updateTimestamp() {
+        const now = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+        const d = `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}`;
+        const t = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        const stamp = `${d} | ${t}`;
+        const el = document.getElementById('currentDateTime');
+        if (el) el.textContent = stamp;
+        return stamp;
     }
 
-    function handleLogin() {
-        const code = document.getElementById('accessCode').value.trim();
-        const errDiv = document.getElementById('loginError');
+    updateTimestamp();
+    setInterval(updateTimestamp, 10000);
 
-        if (code === ADMIN_PASSWORD) {
-            currentUser = { role: 'admin' };
-            errDiv.classList.add('hidden');
-            showScreen('adminScreen');
-            renderAdminPanel();
-            return;
-        }
+    function buildReportText() {
+        const stamp = updateTimestamp();
+        const name = document.getElementById('agentName').value.trim() || '-';
+        const loc = document.getElementById('location').value.trim() || '-';
+        const amount = document.getElementById('saleAmount').value || '0';
+        const status = document.getElementById('status').value;
+        const notes = document.getElementById('notes').value.trim() || '-';
 
-        const emp = db.employees.find(e => e.code === code);
-        if (emp) {
-            currentUser = { role: 'employee', name: emp.name, code: emp.code };
-            errDiv.classList.add('hidden');
-            document.getElementById('empNameDisplay').innerText = emp.name;
-            showScreen('employeeScreen');
-            renderEmployeeSales();
-            return;
-        }
-
-        errDiv.classList.remove('hidden');
+        return `*RAPORT ZILNIC VÂNZĂRI*\n` +
+               `_Emis: ${stamp}_\n` +
+               `────────────────────\n` +
+               `• *Agent:* ${name}\n` +
+               `• *Locația:* ${loc}\n` +
+               `• *Suma:* ${amount} Lei\n` +
+               `• *Status:* ${status}\n` +
+               `• *Obs:* ${notes}`;
     }
 
-    function showScreen(screenId) {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('employeeScreen').classList.add('hidden');
-        document.getElementById('adminScreen').classList.add('hidden');
-        document.getElementById(screenId).classList.remove('hidden');
+    function sendToWhatsApp(e) {
+        e.preventDefault();
+        const text = buildReportText();
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function logout() {
-        currentUser = null;
-        document.getElementById('accessCode').value = '';
-        showScreen('loginScreen');
-    }
-
-    function addSale() {
-        const institution = document.getElementById('empInstitution').value.trim();
-        const amount = parseFloat(document.getElementById('empAmount').value);
-
-        if (!institution || isNaN(amount)) {
-            alert("Completați corect instituția și suma!");
-            return;
-        }
-
-        const commission = amount * COMMISSION_RATE;
-        const dateStr = new Date().toLocaleDateString('ro-RO');
-
-        db.sales.push({
-            date: dateStr,
-            employee: currentUser.name,
-            code: currentUser.code,
-            institution: institution,
-            amount: amount,
-            commission: commission
-        });
-
-        saveDb();
-        document.getElementById('empInstitution').value = '';
-        document.getElementById('empAmount').value = '';
-        renderEmployeeSales();
-    }
-
-    function renderEmployeeSales() {
-        const tbody = document.getElementById('empTableBody');
-        tbody.innerHTML = '';
-        const mySales = db.sales.filter(s => s.code === currentUser.code);
-
-        if (mySales.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Nicio înregistrare momentan.</td></tr>`;
-            return;
-        }
-
-        mySales.forEach(s => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${s.date}</td>
-                <td>${s.institution}</td>
-                <td style="color: ${s.amount < 0 ? 'red' : 'inherit'}">${s.amount.toFixed(2)} Lei</td>
-                <td>${s.commission.toFixed(2)} Lei</td>
-            `;
-            tbody.appendChild(tr);
+    function copyReport() {
+        const form = document.getElementById('salesForm');
+        if (!form.reportValidity()) return;
+        const text = buildReportText();
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('toastMsg');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
         });
     }
 
-    function exportExcel() {
-        const mySales = db.sales.filter(s => s.code === currentUser.code);
-        if (mySales.length === 0) {
-            alert("Nu aveți date de exportat!");
-            return;
-        }
-        
-        const wsData = [["Data", "Angajat", "Instituție", "Sumă (Lei)", "Comision 4% (Lei)"]];
-        mySales.forEach(s => {
-            wsData.push([s.date, s.employee, s.institution, s.amount, s.commission]);
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Vanzari");
-        XLSX.writeFile(wb, `vanzare_data_${currentUser.code}.xlsx`);
-    }
-
-    function renderAdminPanel() {
-        const empTbody = document.getElementById('adminEmpTableBody');
-        empTbody.innerHTML = '';
-        db.employees.forEach((e, index) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${e.name}</td>
-                <td><span class="badge">${e.code}</span></td>
-                <td><button onclick="removeEmployee(${index})" class="btn-danger" style="padding:4px 8px; font-size:0.75rem; margin:0;">Șterge</button></td>
-            `;
-            empTbody.appendChild(tr);
-        });
-
-        const salesTbody = document.getElementById('adminSalesTableBody');
-        salesTbody.innerHTML = '';
-        if (db.sales.length === 0) {
-            salesTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">Nicio vânzare înregistrată încă.</td></tr>`;
-            return;
-        }
-
-        db.sales.forEach(s => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${s.employee}</td>
-                <td>${s.institution}</td>
-                <td style="color: ${s.amount < 0 ? 'red' : 'inherit'}">${s.amount.toFixed(2)}</td>
-                <td>${s.commission.toFixed(2)}</td>
-            `;
-            salesTbody.appendChild(tr);
-        });
-    }
-
-    function addEmployee() {
-        const name = document.getElementById('newEmpName').value.trim();
-        const code = document.getElementById('newEmpCode').value.trim();
-
-        if (!name || !code) {
-            alert("Completați numele și codul angajatului!");
-            return;
-        }
-
-        if (db.employees.some(e => e.code === code)) {
-            alert("Acest cod este deja folosit!");
-            return;
-        }
-
-        db.employees.push({ name, code });
-        saveDb();
-        document.getElementById('newEmpName').value = '';
-        document.getElementById('newEmpCode').value = '';
-        renderAdminPanel();
-    }
-
-    function removeEmployee(index) {
-        if (confirm("Sigur doriți să ștergeți acest angajat?")) {
-            db.employees.splice(index, 1);
-            saveDb();
-            renderAdminPanel();
-        }
-    }
-
-    function adminExportMaster() {
-        if (db.sales.length === 0) {
-            alert("Nu există date de exportat în master!");
-            return;
-        }
-
-        const wsData = [["Data", "Angajat", "Cod", "Instituție", "Sumă (Lei)", "Comision 4% (Lei)"]];
-        db.sales.forEach(s => {
-            wsData.push([s.date, s.employee, s.code, s.institution, s.amount, s.commission]);
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Master_Vanzari");
-        XLSX.writeFile(wb, "Master_Centralizator_General.xlsx");
+    function resetForm() {
+        document.getElementById('salesForm').reset();
+        updateTimestamp();
     }
 </script>
 
